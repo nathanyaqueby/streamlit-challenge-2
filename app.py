@@ -18,9 +18,8 @@ st.set_page_config(page_title="Expense Tracker",
 # description
 st.markdown("""
 # Expense Tracker
-This app is used to track your expenses and visualize them. 
-Select the type of visualization you want to see using the sidebar. 
-Insert your expenses in the dataframe below and click on the button to generate the visualization.
+Select the type of visualization you want to see using the sidebar, then 
+insert your expenses in the dataframe below.
 """)
 
 @st.cache
@@ -43,13 +42,14 @@ def convert_excel(df):
 # sidebar
 st.sidebar.header("1. Visualization Type 🖼️")
 st.sidebar.markdown("""Select the type of plot(s) you want to see.""")
-viz_type = st.sidebar.multiselect("Visualization Type", ("Pie Chart", "Bar Chart", "Line Chart"), ("Pie Chart", "Bar Chart", "Line Chart"), label_visibility="hidden")
+viz_type = st.sidebar.multiselect("Visualization Type", ("Pie Chart", "Bar Chart", "Line Chart"), ("Pie Chart", "Bar Chart", "Line Chart"),
+                                  label_visibility="collapsed")
 st.sidebar.markdown("""---""")
 
 # select which column to focus on when generating the visualization
 st.sidebar.header("2. Focus Column 📌")
 st.sidebar.markdown("""Select the column you want to emphasize.""")
-focus_column = st.sidebar.selectbox("Focus Column", ("Expense", "Details", "Recipient", "Date", "Payment Method"), label_visibility="hidden")
+focus_column = st.sidebar.selectbox("Focus Column", ("Expense", "Details", "Recipient", "Date", "Payment Method"), label_visibility="collapsed")
 st.sidebar.markdown("""---""")
 
 # create a dataframe
@@ -67,7 +67,7 @@ edited_df = st.experimental_data_editor(df, use_container_width=True, num_rows="
 # download the dataframe as a csv file
 st.sidebar.header("3. Download Dataframe 📥")
 st.sidebar.markdown("""Export the dataframe as a csv or excel file.""")
-file_type = st.sidebar.radio("Download as", ("CSV", "Excel"), horizontal=True, label_visibility="hidden")
+file_type = st.sidebar.radio("Download as", ("CSV", "Excel"), horizontal=True, label_visibility="collapsed")
 
 if file_type == "CSV":
     file = convert_df(edited_df)
