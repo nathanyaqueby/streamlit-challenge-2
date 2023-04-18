@@ -15,6 +15,8 @@ This challenge is focused on building and sharing apps that use one of our most 
 
 This app allows users to track their expenses and visualize them in different types of charts using Streamlit's new editable dataframes feature.
 
+![image](https://user-images.githubusercontent.com/73829218/232923914-a216ab3d-f45e-4c29-afb9-ddcb0cdd3633.png)
+
 ## Features
 - Add, edit, and delete expenses using Streamlit's new editable dataframes feature.
 - Visualize expenses in pie charts, bar charts, and line charts.
