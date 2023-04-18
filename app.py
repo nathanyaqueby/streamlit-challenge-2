@@ -43,13 +43,13 @@ index=[i for i in range(1, 8)]
 edited_df = st.experimental_data_editor(df, use_container_width=True, num_rows="dynamic", )
 
 # generate visualization from the edited dataframe
-if viz_type == "Pie Chart":
+if "Pie Chart" in viz_type:
     fig = px.pie(edited_df, values="Amount", names="Expense", title="Expense Pie Chart")
     st.plotly_chart(fig)
-if viz_type == "Bar Chart":
+if "Bar Chart" in viz_type:
     fig = px.bar(edited_df, x="Expense", y="Amount", title="Expense Bar Chart")
     st.plotly_chart(fig)
-if viz_type == "Line Chart":
+if "Line Chart" in viz_type:
     fig = px.line(edited_df, x="Expense", y="Amount", title="Expense Line Chart")
     st.plotly_chart(fig)
 
