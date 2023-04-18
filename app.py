@@ -41,13 +41,19 @@ st.sidebar.markdown("""
 Select the type of visualization you want to see.
 """)
 viz_type = st.sidebar.multiselect("Visualization Type", ("Pie Chart", "Bar Chart", "Line Chart"), ("Pie Chart", "Bar Chart", "Line Chart"))
+st.sidebar.markdown("""
+---
+""")
 
 # select which column to focus on when generating the visualization
 st.sidebar.header("2. Focus Column 📌")
 st.sidebar.markdown("""
 Select the column you want to focus on when generating the visualization.
 """)
-focus_column = st.sidebar.selectbox("Focus Column", ("Expense", "Details", "Recipient", "Date", "Amount"))
+focus_column = st.sidebar.selectbox("Focus Column", ("Expense", "Details", "Recipient", "Date", "Payment Method"))
+st.sidebar.markdown("""
+---
+""")
 
 
 # create a dataframe
@@ -73,33 +79,86 @@ file_type = st.sidebar.radio("Download as", ("CSV", "Excel"), horizontal=True)
 
 if file_type == "CSV":
     file = convert_df(edited_df)
+    st.sidebar.download_button("Download dataframe", file, "expense_report.csv", "text/csv", use_container_width=True)
 elif file_type == "Excel":
     file = convert_excel(edited_df)
+    st.sidebar.download_button("Download dataframe", file, "expense_report.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", use_container_width=True)
 
-st.sidebar.download_button("Download dataframe", file, "expense_report.csv", "text/csv")
+# create columns depending on the visualization type
+cols = st.beta_columns(len(viz_type))
 
-# create tabs depending on the visualization type
-if "Pie Chart" in viz_type:
-    st.header("Pie Chart 🥧")
-    st.markdown("""
-    This is a pie chart.
-    """)
-    fig = px.pie(edited_df, values="Amount", names=focus_column, title=f"{focus_column} Pie Chart")
-    st.plotly_chart(fig)
-if "Bar Chart" in viz_type:
-    st.header("Bar Chart 📊")
-    st.markdown("""
-    This is a bar chart.
-    """)
-    fig = px.bar(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Bar Chart")
-    st.plotly_chart(fig)
-if "Line Chart" in viz_type:
-    st.header("Line Chart 📈")
-    st.markdown("""
-    This is a line chart.
-    """)
-    fig = px.line(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Line Chart")
-    st.plotly_chart(fig)
+# generate the visualization
+if len(viz_type) == 1:
+    with cols[0]:
+        if viz_type[0] == "Pie Chart":
+            st.header("Pie Chart 🥧")
+            st.markdown("""
+            This is a pie chart.
+            """)
+            fig = px.pie(edited_df, values="Amount", names=focus_column, title=f"{focus_column} Pie Chart")
+            st.plotly_chart(fig)
+        elif viz_type[0] == "Bar Chart":
+            st.header("Bar Chart 📊")
+            st.markdown("""
+            This is a bar chart.
+            """)
+            fig = px.bar(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Bar Chart")
+            st.plotly_chart(fig)
+        elif viz_type[0] == "Line Chart":
+            st.header("Line Chart 📈")
+            st.markdown("""
+            This is a line chart.
+            """)
+            fig = px.line(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Line Chart")
+            st.plotly_chart(fig)
+
+elif len(viz_type) == 2:
+    with cols[1]:
+        if viz_type[1] == "Pie Chart":
+            st.header("Pie Chart 🥧")
+            st.markdown("""
+            This is a pie chart.
+            """)
+            fig = px.pie(edited_df, values="Amount", names=focus_column, title=f"{focus_column} Pie Chart")
+            st.plotly_chart(fig)
+        elif viz_type[1] == "Bar Chart":
+            st.header("Bar Chart 📊")
+            st.markdown("""
+            This is a bar chart.
+            """)
+            fig = px.bar(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Bar Chart")
+            st.plotly_chart(fig)
+        elif viz_type[1] == "Line Chart":
+            st.header("Line Chart 📈")
+            st.markdown("""
+            This is a line chart.
+            """)
+            fig = px.line(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Line Chart")
+            st.plotly_chart(fig)
+
+elif len(viz_type) == 3:
+    with cols[2]:
+        if viz_type[2] == "Pie Chart":
+            st.header("Pie Chart 🥧")
+            st.markdown("""
+            This is a pie chart.
+            """)
+            fig = px.pie(edited_df, values="Amount", names=focus_column, title=f"{focus_column} Pie Chart")
+            st.plotly_chart(fig)
+        elif viz_type[2] == "Bar Chart":
+            st.header("Bar Chart 📊")
+            st.markdown("""
+            This is a bar chart.
+            """)
+            fig = px.bar(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Bar Chart")
+            st.plotly_chart(fig)
+        elif viz_type[2] == "Line Chart":
+            st.header("Line Chart 📈")
+            st.markdown("""
+            This is a line chart.
+            """)
+            fig = px.line(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Line Chart")
+            st.plotly_chart(fig)
 
 # footer
 st.markdown("""
