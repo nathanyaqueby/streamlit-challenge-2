@@ -26,28 +26,33 @@ st.sidebar.header("Visualization Type")
 st.sidebar.markdown("""
 Select the type of visualization you want to see.
 """)
-viz_type = st.sidebar.selectbox("Visualization Type", ("Pie Chart", "Bar Chart", "Line Chart"))
+viz_type = st.sidebar.multiselect("Visualization Type", ("Pie Chart", "Bar Chart", "Line Chart"))
 
 # dataframe
 st.header("Insert your expenses")
 
 # create a dataframe
 df = pd.DataFrame({
-    "Expense": ["Rent", "Food", "Transportation", "Phone", "Other"],
-    "Amount": [1000, 400, 200, 50, 300]
-})
+    "Expense": ["Rent", "Food", "Transportation", "Phone", "Other", "Food", "Transportation"],
+    "Details": ["Monthly rent", "Groceries", "Gas, Uber, etc.", "Phone bill", "Charity", "Groceries", "Gas, Uber, etc."],
+    "Amount": [1000, 400, 200, 50, 300, 400, 200]
+},
+index=[i for i in range(1, 8)]
+)
 
-edited_df = st.experimental_data_editor(df)
+edited_df = st.experimental_data_editor(df, use_container_width=True, num_rows="dynamic")
+
+
 
 # generate visualization from the edited dataframe
-if st.button("Generate Visualization"):
+if st.sidebar.button("Generate Visualization"):
     if viz_type == "Pie Chart":
         fig = px.pie(edited_df, values="Amount", names="Expense", title="Expense Pie Chart")
         st.plotly_chart(fig)
-    elif viz_type == "Bar Chart":
+    if viz_type == "Bar Chart":
         fig = px.bar(edited_df, x="Expense", y="Amount", title="Expense Bar Chart")
         st.plotly_chart(fig)
-    elif viz_type == "Line Chart":
+    if viz_type == "Line Chart":
         fig = px.line(edited_df, x="Expense", y="Amount", title="Expense Line Chart")
         st.plotly_chart(fig)
 
