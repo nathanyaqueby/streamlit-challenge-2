@@ -43,13 +43,13 @@ def convert_excel(df):
 # sidebar
 st.sidebar.header("1. Visualization Type 🖼️")
 st.sidebar.markdown("""Select the type of plot(s) you want to see.""")
-viz_type = st.sidebar.multiselect("Visualization Type", ("Pie Chart", "Bar Chart", "Line Chart"), ("Pie Chart", "Bar Chart", "Line Chart"))
+viz_type = st.sidebar.multiselect("Visualization Type", ("Pie Chart", "Bar Chart", "Line Chart"), ("Pie Chart", "Bar Chart", "Line Chart"), label_visibility="hidden")
 st.sidebar.markdown("""---""")
 
 # select which column to focus on when generating the visualization
 st.sidebar.header("2. Focus Column 📌")
 st.sidebar.markdown("""Select the column you want to emphasize.""")
-focus_column = st.sidebar.selectbox("Focus Column", ("Expense", "Details", "Recipient", "Date", "Payment Method"))
+focus_column = st.sidebar.selectbox("Focus Column", ("Expense", "Details", "Recipient", "Date", "Payment Method"), label_visibility="hidden")
 st.sidebar.markdown("""---""")
 
 # create a dataframe
@@ -60,16 +60,14 @@ df = pd.DataFrame({
     "Date": ["01/12/2021", "02/12/2021", "03/12/2021", "04/12/2021", "05/12/2021", "06/12/2021", "07/12/2021"],
     "Payment Method": ["Debit", "Cash", "Cash", "Credit", "Cash", "Cash", "Cash"],
     "Amount": [1000, 400, 200, 50, 300, 400, 200]
-},
-index=[i for i in range(1, 8)]
-)
+    }, index=[i for i in range(1, 8)])
 
 edited_df = st.experimental_data_editor(df, use_container_width=True, num_rows="dynamic", )
 
 # download the dataframe as a csv file
 st.sidebar.header("3. Download Dataframe 📥")
 st.sidebar.markdown("""Export the dataframe as a csv or excel file.""")
-file_type = st.sidebar.radio("Download as", ("CSV", "Excel"), horizontal=True)
+file_type = st.sidebar.radio("Download as", ("CSV", "Excel"), horizontal=True, label_visibility="hidden")
 
 if file_type == "CSV":
     file = convert_df(edited_df)
