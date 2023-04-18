@@ -1,12 +1,9 @@
-"""
-Nathanya Queby Satriani
-18/04/2023
-"""
-
 import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+from io import BytesIO
+from pyxlsb import open_workbook as open_xlsb
 
 st.set_page_config(page_title="Expense Tracker",
                    page_icon="💰",
@@ -32,29 +29,28 @@ def convert_df(df):
     return df.to_csv().encode('utf-8')
 
 def convert_excel(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
-    return df.to_excel().encode('utf-8')
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    df.to_excel(writer, index=False, sheet_name='Sheet1')
+    workbook = writer.book
+    worksheet = writer.sheets['Sheet1']
+    format1 = workbook.add_format({'num_format': '0.00'}) 
+    worksheet.set_column('A:A', None, format1)  
+    writer.save()
+    processed_data = output.getvalue()
+    return processed_data
 
 # sidebar
 st.sidebar.header("1. Visualization Type 🖼️")
-st.sidebar.markdown("""
-Select the type of visualization you want to see.
-""")
+st.sidebar.markdown("""Select the type of plot(s) you want to see.""")
 viz_type = st.sidebar.multiselect("Visualization Type", ("Pie Chart", "Bar Chart", "Line Chart"), ("Pie Chart", "Bar Chart", "Line Chart"))
-st.sidebar.markdown("""
----
-""")
+st.sidebar.markdown("""---""")
 
 # select which column to focus on when generating the visualization
 st.sidebar.header("2. Focus Column 📌")
-st.sidebar.markdown("""
-Select the column you want to focus on when generating the visualization.
-""")
+st.sidebar.markdown("""Select the column you want to emphasize.""")
 focus_column = st.sidebar.selectbox("Focus Column", ("Expense", "Details", "Recipient", "Date", "Payment Method"))
-st.sidebar.markdown("""
----
-""")
-
+st.sidebar.markdown("""---""")
 
 # create a dataframe
 df = pd.DataFrame({
@@ -72,9 +68,7 @@ edited_df = st.experimental_data_editor(df, use_container_width=True, num_rows="
 
 # download the dataframe as a csv file
 st.sidebar.header("3. Download Dataframe 📥")
-st.sidebar.markdown("""
-Download the dataframe as a csv or excel file.
-""")
+st.sidebar.markdown("""Export the dataframe as a csv or excel file.""")
 file_type = st.sidebar.radio("Download as", ("CSV", "Excel"), horizontal=True)
 
 if file_type == "CSV":
@@ -82,83 +76,27 @@ if file_type == "CSV":
     st.sidebar.download_button("Download dataframe", file, "expense_report.csv", "text/csv", use_container_width=True)
 elif file_type == "Excel":
     file = convert_excel(edited_df)
-    st.sidebar.download_button("Download dataframe", file, "expense_report.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", use_container_width=True)
+    st.sidebar.download_button("Download dataframe", file, "expense_report.xlsx", use_container_width=True)
 
 # create columns depending on the visualization type
 cols = st.beta_columns(len(viz_type))
 
 # generate the visualization
-if len(viz_type) == 1:
-    with cols[0]:
-        if viz_type[0] == "Pie Chart":
+for i, viz in enumerate(viz_type):
+    with cols[i]:
+        if viz == "Pie Chart":
             fig = px.pie(edited_df, values="Amount", names=focus_column, title=f"{focus_column} Pie Chart")
-            st.plotly_chart(fig)
-        elif viz_type[0] == "Bar Chart":
+            st.plotly_chart(fig, use_container_width=True)
+        elif viz == "Bar Chart":
             fig = px.bar(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Bar Chart")
-            st.plotly_chart(fig)
-        elif viz_type[0] == "Line Chart":
+            st.plotly_chart(fig, use_container_width=True)
+        elif viz == "Line Chart":
             fig = px.line(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Line Chart")
-            st.plotly_chart(fig)
-
-elif len(viz_type) == 2:
-    with cols[0]:
-        if viz_type[0] == "Pie Chart":
-            fig = px.pie(edited_df, values="Amount", names=focus_column, title=f"{focus_column} Pie Chart")
-            st.plotly_chart(fig)
-        elif viz_type[0] == "Bar Chart":
-            fig = px.bar(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Bar Chart")
-            st.plotly_chart(fig)
-        elif viz_type[0] == "Line Chart":
-            fig = px.line(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Line Chart")
-            st.plotly_chart(fig)
-
-    with cols[1]:
-        if viz_type[1] == "Pie Chart":
-            fig = px.pie(edited_df, values="Amount", names=focus_column, title=f"{focus_column} Pie Chart")
-            st.plotly_chart(fig)
-        elif viz_type[1] == "Bar Chart":
-            fig = px.bar(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Bar Chart")
-            st.plotly_chart(fig)
-        elif viz_type[1] == "Line Chart":
-            fig = px.line(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Line Chart")
-            st.plotly_chart(fig)
-
-elif len(viz_type) == 3:
-    with cols[0]:
-        if viz_type[0] == "Pie Chart":
-            fig = px.pie(edited_df, values="Amount", names=focus_column, title=f"{focus_column} Pie Chart")
-            st.plotly_chart(fig)
-        elif viz_type[0] == "Bar Chart":
-            fig = px.bar(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Bar Chart")
-            st.plotly_chart(fig)
-        elif viz_type[0] == "Line Chart":
-            fig = px.line(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Line Chart")
-            st.plotly_chart(fig)
-            
-    with cols[1]:
-        if viz_type[1] == "Pie Chart":
-            fig = px.pie(edited_df, values="Amount", names=focus_column, title=f"{focus_column} Pie Chart")
-            st.plotly_chart(fig)
-        elif viz_type[1] == "Bar Chart":
-            fig = px.bar(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Bar Chart")
-            st.plotly_chart(fig)
-        elif viz_type[1] == "Line Chart":
-            fig = px.line(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Line Chart")
-            st.plotly_chart(fig)
-            
-    with cols[2]:
-        if viz_type[2] == "Pie Chart":
-            fig = px.pie(edited_df, values="Amount", names=focus_column, title=f"{focus_column} Pie Chart")
-            st.plotly_chart(fig)
-        elif viz_type[2] == "Bar Chart":
-            fig = px.bar(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Bar Chart")
-            st.plotly_chart(fig)
-        elif viz_type[2] == "Line Chart":
-            fig = px.line(edited_df, x=focus_column, y="Amount", title=f"{focus_column} Line Chart")
-            st.plotly_chart(fig)
+            st.plotly_chart(fig, use_container_width=True)
 
 # footer
 st.markdown("""
 ---
-Made by [Nathanya Queby Satriani](https://linkedin.com/in/queby/)
+Made by [Nathanya Queby Satriani](https://linkedin.com/in/queby/).
+Check out the [source code](www.github.com/nathanyaqueby/streamlit-challenge-2) on GitHub.
 """)
