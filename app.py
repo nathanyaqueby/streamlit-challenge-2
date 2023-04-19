@@ -96,5 +96,5 @@ for i, viz in enumerate(viz_type):
 st.markdown("""
 ---
 Made by [Nathanya Queby Satriani](https://linkedin.com/in/queby/).
-Check out the [source code](www.github.com/nathanyaqueby/streamlit-challenge-2) on GitHub.
+Check out the [source code](https://github.com/nathanyaqueby/streamlit-challenge-2) on GitHub.
 """)
