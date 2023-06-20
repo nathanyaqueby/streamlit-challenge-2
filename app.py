@@ -77,7 +77,7 @@ elif file_type == "Excel":
     st.sidebar.download_button("Download dataframe", file, "expense_report.xlsx", use_container_width=True)
 
 # create columns depending on the visualization type
-cols = st.beta_columns(len(viz_type))
+cols = st.columns(len(viz_type))
 
 # generate the visualization
 for i, viz in enumerate(viz_type):
